@@ -12,11 +12,11 @@ from datetime import datetime, tzinfo
 from time import sleep
 
 def get_connection():
-    return psycopg2.connect( host="10.101.0.178", port=5432, user="david_asmuth", password=open( "db_pw.pw" ).read(), database="postgres" )
+    return psycopg2.connect( host="10.101.0.178", port=5432, user="david_asmuth", password="918214012", database="postgres" )
 
 def main():
     last_check = datetime.min
-    repo = Github( "OITDatabaseGithub", open( "github_pw.pw" ).read() ).get_user().get_repo( "LabQueries" )
+    repo = Github( "OITDatabaseGithub", "longjohnsilver1" ).get_user().get_repo( "LabQueries" )
     
     while( True ):
         try:
@@ -66,7 +66,7 @@ def run_query_insert_result( query, repo, folder, filename ):
         cur = con.cursor()
         cur.execute( query )
         result = ( ",".join( [x[0] for x in cur.description] ) ) + '\n'
-        result += "\n".join( [",".join( [str(col) for col in row] ) for row in cur] )
+        result += "\n".join( [",".join( ['"' + str(col) + '"' for col in row] ) for row in cur] )
         filename = no_ext( filename ) + ".csv"    
         repo.create_file( "/" + folder + "/Results/" + filename, "Result for " + folder + ' ' + filename, result )
     except Exception as e:
