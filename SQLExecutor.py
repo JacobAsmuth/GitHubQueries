@@ -11,11 +11,11 @@ from datetime import datetime, tzinfo
 from time import sleep
 
 def get_connection():
-    return psycopg2.connect( host="10.101.0.178", port=5432, user="david_asmuth", password=open( "db_password.pw" ).read() )
+    return psycopg2.connect( host="10.101.0.178", port=5432, user="david_asmuth", password=open( "db_pw.pw" ).read() )
 
 def main():
     last_check = datetime.min
-    repo = Github( "OITDatabaseGithub", open( "github_password.pw" ).read() ).get_user().get_repo( "LabQueries" )
+    repo = Github( "OITDatabaseGithub", open( "github_pw.pw" ).read() ).get_user().get_repo( "LabQueries" )
     
     while( True ):
         try:
