@@ -2,6 +2,7 @@ import pip
 
 #pip.main(["install", "PyGithub"] )
 #pip.main(["install", "psycopg2"] )
+#sudo apt-get install libpq-dev python-dev
 #pip.main(["install", "pymysql"] )
 
 from github import Github
@@ -11,7 +12,7 @@ from datetime import datetime, tzinfo
 from time import sleep
 
 def get_connection():
-    return psycopg2.connect( host="10.101.0.178", port=5432, user="david_asmuth", password=open( "db_pw.pw" ).read() )
+    return psycopg2.connect( host="10.101.0.178", port=5432, user="david_asmuth", password=open( "db_pw.pw" ).read(), database="postgres" )
 
 def main():
     last_check = datetime.min
@@ -48,11 +49,11 @@ def check_repo( repo ):
                 run_query_insert_result( query, repo, folder.name, file.name )
         elif len( subs ) == 2 and "Scripts" in subs and "Results" in subs:
             result_files = [no_ext( x.name ) for x in repo.get_dir_contents( folder.name + "/Results/" )]
-            query_files = [x.name for x in repo.get_dir_contents( folder.name + "/Scripts/" ) if no_ext( x.name ) not in result_files]
+            query_files = [str( x.name ) for x in repo.get_dir_contents( str( folder.name ) + "/Scripts/" ) if no_ext( x.name ) not in result_files]
             for file_name in query_files:
                 try:
-                    query = repo.get_file_contents( folder.name + "/Scripts/" + file_name ).decoded_content
-                    run_query_insert_result( query, repo, folder.name, file_name )
+                    query = repo.get_file_contents( str( folder.name ) + "/Scripts/" + file_name ).decoded_content
+                    run_query_insert_result( query, repo, str( folder.name ), file_name )
                 except Exception as e:
                     print( "Tried to run query for file " + file_name + " and failed." )
                     print( e )
